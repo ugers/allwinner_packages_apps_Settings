@@ -207,8 +207,15 @@ final class HeadsetProfile implements LocalBluetoothProfile {
         if (V) Log.d(TAG, "finalize()");
         if (mService != null) {
             try {
-                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(BluetoothProfile.HEADSET,
+
+				BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+				if ( adapter != null )
+				{
+					adapter.closeProfileProxy(BluetoothProfile.HEADSET,
                                                                        mService);
+				}
+				
+                
                 mService = null;
             }catch (Throwable t) {
                 Log.w(TAG, "Error cleaning up HID proxy", t);

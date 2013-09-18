@@ -44,6 +44,7 @@ import com.google.android.collect.Lists;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import android.util.Log;
 
 public class StorageVolumePreferenceCategory extends PreferenceCategory {
     public static final String KEY_CACHE = "cache";
@@ -126,7 +127,7 @@ public class StorageVolumePreferenceCategory extends PreferenceCategory {
         mStorageManager = StorageManager.from(context);
         mUserManager = (UserManager) context.getSystemService(Context.USER_SERVICE);
 
-        setTitle(volume != null ? volume.getDescription(context)
+        setTitle(volume != null ? volume.getPath().substring( 5 )
                 : context.getText(R.string.internal_storage));
     }
 
@@ -235,7 +236,10 @@ public class StorageVolumePreferenceCategory extends PreferenceCategory {
         // Only update for physical volumes
         if (mVolume == null) return;
 
-        mMountTogglePreference.setEnabled(true);
+		if ( mMountTogglePreference != null )
+		{
+        	mMountTogglePreference.setEnabled(true);
+		}
 
         final String state = mStorageManager.getVolumeState(mVolume.getPath());
 
@@ -244,25 +248,39 @@ public class StorageVolumePreferenceCategory extends PreferenceCategory {
             if (mFormatPreference != null) {
                 removePreference(mFormatPreference);
             }
-        } else {
-            mItemAvailable.setSummary(R.string.memory_available);
         }
 
         if (Environment.MEDIA_MOUNTED.equals(state)
-                || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            mMountTogglePreference.setEnabled(true);
-            mMountTogglePreference.setTitle(mResources.getString(R.string.sd_eject));
-            mMountTogglePreference.setSummary(mResources.getString(R.string.sd_eject_summary));
+                || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) 
+        {
+        	if ( mMountTogglePreference != null )
+			{
+            	mMountTogglePreference.setEnabled(true);
+            	mMountTogglePreference.setTitle(mResources.getString(R.string.sd_eject));
+            	mMountTogglePreference.setSummary(mResources.getString(R.string.sd_eject_summary));
+			}
+
+			addPreference(mItemTotal);
+        	addPreference(mItemAvailable);
+			
         } else {
             if (Environment.MEDIA_UNMOUNTED.equals(state) || Environment.MEDIA_NOFS.equals(state)
-                    || Environment.MEDIA_UNMOUNTABLE.equals(state)) {
-                mMountTogglePreference.setEnabled(true);
-                mMountTogglePreference.setTitle(mResources.getString(R.string.sd_mount));
-                mMountTogglePreference.setSummary(mResources.getString(R.string.sd_mount_summary));
-            } else {
-                mMountTogglePreference.setEnabled(false);
-                mMountTogglePreference.setTitle(mResources.getString(R.string.sd_mount));
-                mMountTogglePreference.setSummary(mResources.getString(R.string.sd_insert_summary));
+                    || Environment.MEDIA_UNMOUNTABLE.equals(state)) 
+            {
+            	if ( mMountTogglePreference != null )
+				{
+                	mMountTogglePreference.setEnabled(true);
+                	mMountTogglePreference.setTitle(mResources.getString(R.string.sd_mount));
+                	mMountTogglePreference.setSummary(mResources.getString(R.string.sd_mount_summary));
+				}
+            } else 
+            {
+            	if ( mMountTogglePreference != null )
+				{
+                	mMountTogglePreference.setEnabled(false);
+                	mMountTogglePreference.setTitle(mResources.getString(R.string.sd_mount));
+                	mMountTogglePreference.setSummary(mResources.getString(R.string.sd_insert_summary));
+				}
             }
 
             removePreference(mUsageBarPreference);
@@ -274,12 +292,21 @@ public class StorageVolumePreferenceCategory extends PreferenceCategory {
         }
 
         if (mUsbConnected && (UsbManager.USB_FUNCTION_MTP.equals(mUsbFunction) ||
-                UsbManager.USB_FUNCTION_PTP.equals(mUsbFunction))) {
-            mMountTogglePreference.setEnabled(false);
+                UsbManager.USB_FUNCTION_PTP.equals(mUsbFunction))) 
+            {
+				if ( mMountTogglePreference != null )
+			{	
+            	mMountTogglePreference.setEnabled(false);
+			}
+				
             if (Environment.MEDIA_MOUNTED.equals(state)
-                    || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-                mMountTogglePreference.setSummary(
+                    || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) 
+            {
+            	if ( mMountTogglePreference != null )
+				{
+                	mMountTogglePreference.setSummary(
                         mResources.getString(R.string.mtp_ptp_mode_summary));
+				}
             }
 
             if (mFormatPreference != null) {
@@ -309,8 +336,26 @@ public class StorageVolumePreferenceCategory extends PreferenceCategory {
 
     private static long totalValues(HashMap<String, Long> map, String... keys) {
         long total = 0;
-        for (String key : keys) {
-            total += map.get(key);
+		Long temp = null;
+
+		if ( map == null )
+		{
+//			Log.i("zhao", "map ======= null" );
+			return 0;
+		}
+		
+        for (String key : keys) 
+		{
+//			Log.i("zhao", "key ======= " + key );
+
+			temp = map.get(key);
+			if ( temp == null )
+			{
+//				Log.i("zhao", "null key ======= " + key );
+				continue;
+			}
+			
+            total += temp;
         }
         return total;
     }
@@ -327,15 +372,21 @@ public class StorageVolumePreferenceCategory extends PreferenceCategory {
 
         updatePreference(mItemApps, details.appsSize);
 
+//		Log.i("zhao", "details.mediaSize000000000000" );
+
         final long dcimSize = totalValues(details.mediaSize, Environment.DIRECTORY_DCIM,
                 Environment.DIRECTORY_MOVIES, Environment.DIRECTORY_PICTURES);
         updatePreference(mItemDcim, dcimSize);
 
+
+//		Log.i("zhao", "details.mediaSize11111111111111" );
         final long musicSize = totalValues(details.mediaSize, Environment.DIRECTORY_MUSIC,
                 Environment.DIRECTORY_ALARMS, Environment.DIRECTORY_NOTIFICATIONS,
                 Environment.DIRECTORY_RINGTONES, Environment.DIRECTORY_PODCASTS);
         updatePreference(mItemMusic, musicSize);
 
+
+//		Log.i("zhao", "details.mediaSize222222222222" );
         final long downloadsSize = totalValues(details.mediaSize, Environment.DIRECTORY_DOWNLOADS);
         updatePreference(mItemDownloads, downloadsSize);
 

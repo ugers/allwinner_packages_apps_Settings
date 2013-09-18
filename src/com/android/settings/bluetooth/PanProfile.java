@@ -70,8 +70,11 @@ final class PanProfile implements LocalBluetoothProfile {
 
     PanProfile(Context context) {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        adapter.getProfileProxy(context, new PanServiceListener(),
+		if ( adapter != null )
+        {
+        	adapter.getProfileProxy(context, new PanServiceListener(),
                 BluetoothProfile.PAN);
+		}
     }
 
     public boolean isConnectable() {
@@ -172,8 +175,14 @@ final class PanProfile implements LocalBluetoothProfile {
     protected void finalize() {
         if (V) Log.d(TAG, "finalize()");
         if (mService != null) {
-            try {
-                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(BluetoothProfile.PAN, mService);
+            try 
+			{
+				BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+				if ( adapter != null )
+				{
+					adapter.closeProfileProxy(BluetoothProfile.PAN, mService);
+				}
+				
                 mService = null;
             }catch (Throwable t) {
                 Log.w(TAG, "Error cleaning up PAN proxy", t);

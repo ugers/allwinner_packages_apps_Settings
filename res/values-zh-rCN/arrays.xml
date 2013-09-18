@@ -64,7 +64,19 @@
     <item msgid="1932071435506638315">"普通"</item>
     <item msgid="38373998008112077">"大"</item>
     <item msgid="7786168277516233536">"超大"</item>
+  </string-array> 
+   
+  <string-array name="accelerometer_entries">
+      <item >默认坐标系.</item>
+      <item >特殊坐标系,用于支持某些游戏 .</item>
   </string-array>
+
+  <string-array name="accelerometer_summaries">
+      <item >使用默认坐标系.</item>
+      <item >使用特殊坐标系,以便支持某些游戏 .</item>
+  </string-array>
+
+    
   <string-array name="tts_rate_entries">
     <item msgid="6041212618892492920">"很慢"</item>
     <item msgid="2361722960903353554">"慢"</item>

@@ -71,8 +71,11 @@ final class A2dpProfile implements LocalBluetoothProfile {
     A2dpProfile(Context context, LocalBluetoothProfileManager profileManager) {
         mProfileManager = profileManager;
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-        adapter.getProfileProxy(context, new A2dpServiceListener(),
+		if ( adapter != null )
+        {
+        	adapter.getProfileProxy(context, new A2dpServiceListener(),
                 BluetoothProfile.A2DP);
+		}
     }
 
     public boolean isConnectable() {
@@ -183,8 +186,13 @@ final class A2dpProfile implements LocalBluetoothProfile {
         if (V) Log.d(TAG, "finalize()");
         if (mService != null) {
             try {
-                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(BluetoothProfile.A2DP,
-                                                                       mService);
+
+				BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+				if ( adapter != null )
+				{
+					adapter.closeProfileProxy(BluetoothProfile.A2DP, mService);
+				}
+
                 mService = null;
             }catch (Throwable t) {
                 Log.w(TAG, "Error cleaning up A2DP proxy", t);

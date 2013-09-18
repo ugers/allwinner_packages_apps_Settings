@@ -167,9 +167,15 @@ final class HidProfile implements LocalBluetoothProfile {
     protected void finalize() {
         if (V) Log.d(TAG, "finalize()");
         if (mService != null) {
-            try {
-                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(BluetoothProfile.INPUT_DEVICE,
-                                                                       mService);
+            try 
+			{
+				BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+				if ( adapter != null )
+				{
+					adapter.closeProfileProxy(BluetoothProfile.INPUT_DEVICE,
+                                                                   mService);
+				}
+			
                 mService = null;
             }catch (Throwable t) {
                 Log.w(TAG, "Error cleaning up HID proxy", t);

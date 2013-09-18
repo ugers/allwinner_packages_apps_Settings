@@ -54,13 +54,18 @@ public class BluetoothRequestPermissionTest extends Activity {
     private class BtScanOnClickListener implements OnClickListener {
         public void onClick(View v) {
             Button scanButton = (Button) v;
-            if (mAdapter.isDiscovering()) {
+
+			if ( mAdapter != null )
+			{
+				if (mAdapter.isDiscovering()) {
                 mAdapter.cancelDiscovery();
                 scanButton.setText(R.string.start_scan);
-            } else {
-                mAdapter.startDiscovery();
-                scanButton.setText(R.string.stop_scan);
-            }
+	            } else {
+	                mAdapter.startDiscovery();
+	                scanButton.setText(R.string.stop_scan);
+	            }
+			}
+            
         }
     }
 
@@ -78,11 +83,16 @@ public class BluetoothRequestPermissionTest extends Activity {
 
         Button scanButton = (Button) findViewById(R.id.scan);
         scanButton.setOnClickListener(new BtScanOnClickListener());
-        if (mAdapter.isDiscovering()) {
+
+		if ( mAdapter != null )
+		{
+			if (mAdapter.isDiscovering()) {
             scanButton.setText(R.string.stop_scan);
-        } else {
-            scanButton.setText(R.string.start_scan);
-        }
+	        } else {
+	            scanButton.setText(R.string.start_scan);
+	        }
+		}
+        
 
         mMsgAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
 

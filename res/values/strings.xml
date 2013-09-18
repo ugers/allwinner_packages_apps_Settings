@@ -1803,8 +1803,7 @@
     <!-- Sound & display settings screen, setting option summary displaying the currently selected font size -->
     <string name="summary_font_size" translatable="false">%1$s</string>
     <!-- [CHAR LIMIT=40] Sound & display settings screen, title of dialog for picking font size -->
-    <string name="dialog_title_font_size">Font size</string>
-
+    <string name="dialog_title_font_size">Font size</string> 
     <!-- SIM lock settings title -->
     <string name="sim_lock_settings">SIM card lock settings</string>
     <!-- Security & location settings screen, setting option name -->
@@ -1868,7 +1867,7 @@
     <!-- About phone screen, fcc equipment id label-->
     <string name="fcc_equipment_id">Equipment ID</string>
     <!-- About phone screen,  setting option name-->
-    <string name="baseband_version">Baseband version</string>
+    <string name="baseband_version">Firmware version</string>
     <!-- About phone screen,  setting option name-->
     <string name="kernel_version">Kernel version</string>
     <!-- About phone screen,  setting option name-->
@@ -4363,7 +4362,7 @@
     <!-- Help URL, Tethering [DO NOT TRANSLATE] -->
     <string name="help_url_tether" translatable="false"></string>
     <!-- Help URL, Dreams [DO NOT TRANSLATE] -->
-    <string name="help_url_dreams" translatable="false"></string>
+    <string name="help_url_dreams" translatable="false">http://support.google.com/mobile/?p=settings_dreams</string>
     <!-- Help URL, User settings [DO NOT TRANSLATE] -->
     <string name="help_url_users" translatable="false"></string>
     <!-- Help URL, Location access [DO NOT TRANSLATE] -->
